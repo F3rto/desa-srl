@@ -3,7 +3,7 @@ import { MDBCard, MDBFile, MDBCardBody, MDBCardTitle, MDBInput, MDBRow, MDBCol, 
 import '../../App.css'
 import { addDoc, collection, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase-config";
-import { Slider } from "./Slider";
+import EditImmagini from "./EditImmagini";
 
 export default function EditArticolo(props) {
     const show = props.show;
@@ -11,15 +11,15 @@ export default function EditArticolo(props) {
 
     const articolo = props.articolo.articolo;
     const id = props.articolo.id;
-    const flag = Object.entries(articolo.imm.arrayValue).length !==0
+    const flag = Object.entries(articolo.imm.arrayValue).length !== 0
 
     const articoloCollectionRef = collection(db, "articoli");
 
     function getArrayImm() {
-        if(!flag) return [];
-        let arr=articolo.imm.arrayValue.values;
-        let toRet=[];
-        arr.map((i)=>{
+        if (!flag) return [];
+        let arr = articolo.imm.arrayValue.values;
+        let toRet = [];
+        arr.map((i) => {
             toRet.push(i.stringValue);
         })
         return toRet;
@@ -33,10 +33,11 @@ export default function EditArticolo(props) {
     const [prezzo, setPrezzo] = useState(articolo.prezzo.stringValue);
     const [imm, setImm] = useState(getArrayImm());
     const [invisibile, setInvisibile] = useState(articolo.invisibile.booleanValue)
-    console.log(invisibile)
-
 
     async function salva() {
+        /**
+         * TODO: modifica foto
+         */
         let a = {
             imm: imm,
             nome: nome,
@@ -48,16 +49,13 @@ export default function EditArticolo(props) {
             invisibile: invisibile
         }
         const articoloDoc = doc(db, "articoli", id);
-        let delRes = await deleteDoc(articoloDoc);
-        if (delRes !== null) {
-            let result = await addDoc(articoloCollectionRef, { a });
-            if (result !== null) {
-                window.alert("Articolo aggiornato con successo!");
-                showAdd(false);
-                window.location.reload(false);
-            }
-        }
-        else {
+        try {
+            await deleteDoc(articoloDoc);
+            await addDoc(articoloCollectionRef, { a });
+            window.alert("Articolo aggiornato con successo!");
+            showAdd(false);
+            window.location.reload(false);
+        } catch (error) {
             window.alert("ATTENZIONE!!! Errore nella modifica dell'articolo!");
         }
     }
@@ -79,9 +77,11 @@ export default function EditArticolo(props) {
                 <br />
                 <MDBCardTitle>Modifica Articolo</MDBCardTitle>
                 <MDBCardBody>
-                    {flag?<Slider immagini={articolo.imm.arrayValue.values} />:<></>}
+                    {flag ? <EditImmagini immagini={imm} update={setImm} /> : <></>}
                     <br />
-                    <MDBInput onChange={(e) => { setNome(e.target.value); e.ta }} label="Nome Articolo" id="nome" type="text" value={nome} />
+                    <MDBFile onChange={(e) => { setImm(e.target.files) }} multiple accept="image/*" id='customFile' />
+                    <br />
+                    <MDBInput onChange={(e) => { setNome(e.target.value); }} label="Nome Articolo" id="nome" type="text" value={nome} />
                     <br />
                     <MDBInput onChange={(e) => { setCod(e.target.value) }} label="Codice Articolo" id="cod" type="text" value={cod} />
                     <br />
@@ -94,7 +94,7 @@ export default function EditArticolo(props) {
                     <MDBInput onChange={(e) => { setPrezzo(e.target.value) }} label="Prezzo" id="prezzo" type="text" value={prezzo} />
                     <br />
                     <div id="visible-check">
-                        <MDBCheckbox label="Nascondi" onChange={()=>{setInvisibile(!invisibile)}} checked={invisibile}/>
+                        <MDBCheckbox label="Nascondi" onChange={() => { setInvisibile(!invisibile) }} checked={invisibile} />
                     </div>
                     <br />
                     <div>

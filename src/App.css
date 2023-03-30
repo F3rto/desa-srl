@@ -47,7 +47,7 @@
   margin: 1%;
 }
 
-.add-button{
+#add-button{
   margin: 1%;
 }
 
@@ -65,3 +65,4 @@
   height: 100%; /* Altezza delle immagini */
   object-fit: contain; /* Ridimensiona le immagini per coprire l'intero contenitore */
 }
+

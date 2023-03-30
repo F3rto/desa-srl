@@ -16,7 +16,7 @@ export default function Modificabile(props) {
      * }
      */
     const a = props.articolo.articolo;
-    const flag = Object.entries(a.imm.arrayValue).length !==0
+    const flag = Object.entries(a.imm.arrayValue).length !== 0
     const key = props.articolo.id
     const [editMode, setEditMode] = useState(false);
 
@@ -26,10 +26,20 @@ export default function Modificabile(props) {
 
     async function eliminaImmagini() {
         let arr = a.imm.arrayValue.values;
-        for(let i=0; i<arr.length;i++) {
-            let string = arr[i].stringValue;
-            const immRef = ref(storage, string)
-            await deleteObject(immRef);
+        let ret = true;
+        if (arr == undefined) return;
+        try {
+            for (let i = 0; i < arr.length; i++) {
+                let string = arr[i].stringValue;
+                const immRef = ref(storage, string)
+                await deleteObject(immRef);
+            }
+        } catch (error) {
+            ret = false;
+            window.alert("ATTENZIONE!!! Errore nell' eliminazione dell'articolo!");
+        } finally {
+
+            return ret;
         }
     }
 
@@ -37,9 +47,18 @@ export default function Modificabile(props) {
         let temp = window.confirm("Sei sicuro di voler eliminare l'articolo?");
         if (temp) {
             const articoloDoc = doc(db, "articoli", key);
-            eliminaImmagini();
-            await deleteDoc(articoloDoc);
-            window.location.reload(false);
+            try {
+                let ret = await eliminaImmagini();
+                if (ret) {
+                    await deleteDoc(articoloDoc);
+                    window.alert("Articolo eliminato con successo!");
+                    window.location.reload(false);
+                }
+            } catch (error) {
+                window.alert("ATTENZIONE!!! Errore nell' eliminazione dell'articolo!");
+            }
+
+
         }
         /**
          * Usare dialog react al posto di window.confirm
@@ -54,7 +73,7 @@ export default function Modificabile(props) {
             {
                 !editMode ?
                     <MDBCard alignment="start" className='mb-3 w-75' shadow="5">
-                        {flag?<Slider immagini={a.imm.arrayValue.values}/>:<></>}
+                        {flag ? <Slider immagini={a.imm.arrayValue.values} /> : <></>}
                         <MDBCardBody >
                             <MDBCardTitle>{a.nome.stringValue}</MDBCardTitle>
                             <MDBCardText>
@@ -88,7 +107,7 @@ export default function Modificabile(props) {
                     /**
                      * usare un EditArticolo al posto di AddArticolo per troppe incongruenze tra l'aggiunta e la modifica
                      */
-                    <EditArticolo show={editMode} set={setEditMode} articolo={props.articolo}/>
+                    <EditArticolo show={editMode} set={setEditMode} articolo={props.articolo} />
             }
         </div>
     )

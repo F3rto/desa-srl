@@ -24,17 +24,11 @@ export default function AddArticolo(props) {
 
     
     async function aggiungi() {
+        //TODO: aggiungere loader in sovraimpressione
         /**
          * passo all'oggetto Articolo nel campo imm, un array di stringhe con path relativi alle immagini dell'articolo, otterrò le ref con il metodo ref()
          */
         let img=[];
-        for(let i=0; i<imm.length;i++) {
-            let string = 'images/'+imm[i].name+v4();
-            const immRef = ref(storage, string);
-            img.push(immRef.fullPath)
-            //console.log(ref(storage, img[i]))
-            await uploadBytes(immRef, imm[i]);
-        }
         let a = {
             imm: img,
             nome: nome,
@@ -45,12 +39,19 @@ export default function AddArticolo(props) {
             prezzo: prezzo,
             invisibile: invisibile
         }
-        let result = await addDoc(articoloCollectionRef, { a });
-        if (result !== null) {
+        try {
+            for(let i=0; i<imm.length;i++) {
+                let string = 'images/'+imm[i].name+v4();
+                const immRef = ref(storage, string);
+                img.push(immRef.fullPath)
+                //console.log(ref(storage, img[i]))
+                await uploadBytes(immRef, imm[i]);
+            }
+            await addDoc(articoloCollectionRef, { a });
             window.alert("Articolo aggiunto con successo!");
             showAdd(false);
             window.location.reload(false);
-        } else {
+        } catch (error) {
             window.alert("ATTENZIONE!!! Errore nell'inserimento dell'articolo!");
         }
     }
@@ -91,8 +92,8 @@ export default function AddArticolo(props) {
                     </div>
                     <br />
                     <div>
-                        <MDBBtn className="add-button" outline color="success" onClick={aggiungi}>Aggiungi</MDBBtn>
-                        <MDBBtn className="add-button" outline color="danger" onClick={elimina}>Cancella</MDBBtn>
+                        <MDBBtn id="add-button" outline color="success" onClick={aggiungi}>Aggiungi</MDBBtn>
+                        <MDBBtn id="add-button" outline color="danger" onClick={elimina}>Cancella</MDBBtn>
                     </div>
                 </MDBCardBody>
             </MDBCard>}

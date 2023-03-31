@@ -2,8 +2,10 @@ import { useState } from "react";
 import { MDBCard, MDBFile, MDBCardBody, MDBCardTitle, MDBInput, MDBRow, MDBCol, MDBTextArea, MDBBtn, MDBCheckbox } from "mdb-react-ui-kit";
 import '../../App.css'
 import { addDoc, collection, doc, deleteDoc } from "firebase/firestore";
-import { db } from "../../firebase-config";
+import { deleteObject, ref, uploadBytes } from 'firebase/storage';
+import { db, storage } from "../../firebase-config";
 import EditImmagini from "./EditImmagini";
+import { v4 } from "uuid";
 
 export default function EditArticolo(props) {
     const show = props.show;
@@ -32,25 +34,23 @@ export default function EditArticolo(props) {
     const [descr, setDescr] = useState(articolo.descr.stringValue);
     const [prezzo, setPrezzo] = useState(articolo.prezzo.stringValue);
     const [imm, setImm] = useState(getArrayImm());
-    const [invisibile, setInvisibile] = useState(articolo.invisibile.booleanValue)
+    const [invisibile, setInvisibile] = useState(articolo.invisibile.booleanValue);
+    const [toDelList, setToDelList] = useState([]);
+    const [toUpList, setToUpList] = useState([]);
+    const [images, setImages] = useState([]);
 
     async function salva() {
         /**
          * TODO: modifica foto
          */
-        let a = {
-            imm: imm,
-            nome: nome,
-            cod: cod,
-            descr: descr,
-            dim: dim,
-            codeq: codeq,
-            prezzo: prezzo,
-            invisibile: invisibile
-        }
         const articoloDoc = doc(db, "articoli", id);
         try {
             await deleteDoc(articoloDoc);
+            let a = { imm: imm, nome: nome, cod: cod, descr: descr, dim: dim, codeq: codeq, prezzo: prezzo, invisibile: invisibile };
+            toDelList.forEach(async (t)=>{await deleteObject(t);})
+            toUpList.forEach(async (t,i)=>{
+                await uploadBytes(t, images[i]);
+            })
             await addDoc(articoloCollectionRef, { a });
             window.alert("Articolo aggiornato con successo!");
             showAdd(false);
@@ -69,6 +69,20 @@ export default function EditArticolo(props) {
          * link: https://mui.com/material-ui/react-dialog/
          */
     }
+    
+    function addImm(imgs) {
+        let temp = imm;
+        let toUp=[];
+        for(let i=0; i<imgs.length;i++) {
+            let string = 'images/'+imgs[i].name+v4();
+            const immRef = ref(storage, string);
+            toUp.push(immRef);
+            temp.push(string)
+        }
+        setImm(temp);
+        setImages(imgs);
+        setToUpList(toUp);
+    }
 
 
     return (
@@ -77,9 +91,9 @@ export default function EditArticolo(props) {
                 <br />
                 <MDBCardTitle>Modifica Articolo</MDBCardTitle>
                 <MDBCardBody>
-                    {flag ? <EditImmagini immagini={imm} update={setImm} /> : <></>}
+                    {flag ? <EditImmagini immagini={imm} setImm={setImm} update={setToDelList} toDel={toDelList} /> : <></>}
                     <br />
-                    <MDBFile onChange={(e) => { setImm(e.target.files) }} multiple accept="image/*" id='customFile' />
+                    <MDBFile onChange={(e) => { addImm(e.target.files) }} multiple accept="image/*" id='customFile' />
                     <br />
                     <MDBInput onChange={(e) => { setNome(e.target.value); }} label="Nome Articolo" id="nome" type="text" value={nome} />
                     <br />

@@ -27,7 +27,7 @@ export default function Modificabile(props) {
     async function eliminaImmagini() {
         let arr = a.imm.arrayValue.values;
         let ret = true;
-        if (arr == undefined) return;
+        if (arr == undefined) return ret;
         try {
             for (let i = 0; i < arr.length; i++) {
                 let string = arr[i].stringValue;
@@ -38,7 +38,6 @@ export default function Modificabile(props) {
             ret = false;
             window.alert("ATTENZIONE!!! Errore nell' eliminazione dell'articolo!");
         } finally {
-
             return ret;
         }
     }

@@ -3,6 +3,7 @@ import ListaArticoli from "./ListaArticoli"
 import { v4 as uuidv4 } from 'uuid';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase-config";
+import Placeholder from "./Placeholder";
 
 export default function Negozio() {
 
@@ -10,12 +11,17 @@ export default function Negozio() {
     const articoloCollectionRef = collection(db, "articoli");
 
       useEffect(() => {
-        const getArticoli = async () => {
-            const data = await getDocs(articoloCollectionRef);
-            setArticoli(data.docs.map((doc) => ({
-                articolo: doc._document.data.value.mapValue.fields.a.mapValue.fields,
-                id: doc.id
-            })))
+        async function getArticoli() {
+            try {
+                const data = await getDocs(articoloCollectionRef);
+                setArticoli(data.docs.map((doc) => ({
+                    articolo: doc._document.data.value.mapValue.fields.a.mapValue.fields,
+                    id: doc.id
+                })))    
+            } catch (error) {
+                console.err(error);
+            }
+            
 
         }
         getArticoli();
@@ -24,9 +30,11 @@ export default function Negozio() {
     return (
         <div className="principale">
             <h1>Lista Articoli</h1>
-            {articoli[0]!=="pippo" ? 
+            {
+            articoli[0]!=="pippo" ? 
             <ListaArticoli key={uuidv4()} articoli={articoli}/>
-             : <p>caricamento</p>}
+            : <Placeholder/>
+            }
         </div>
     )
 }

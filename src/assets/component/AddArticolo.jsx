@@ -3,8 +3,9 @@ import { MDBCard, MDBFile, MDBCardBody, MDBCardTitle, MDBInput, MDBRow, MDBCol, 
 import '../../App.css'
 import { addDoc, collection } from "firebase/firestore";
 import { db, storage } from "../../firebase-config";
-import { ref, uploadBytes, list } from "firebase/storage";
+import { ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
+import LoadingModel from './LoadingModel'
 
 export default function AddArticolo(props) {
     const show = props.show;
@@ -12,7 +13,7 @@ export default function AddArticolo(props) {
 
     const articoloCollectionRef = collection(db, "articoli");
 
-
+    const [loading, setLoading] = useState(false);
     const [nome, setNome] = useState("---");
     const [cod, setCod] = useState("---");
     const [codeq, setCodeq] = useState("---");
@@ -24,7 +25,6 @@ export default function AddArticolo(props) {
 
     
     async function aggiungi() {
-        //TODO: aggiungere loader in sovraimpressione
         /**
          * passo all'oggetto Articolo nel campo imm, un array di stringhe con path relativi alle immagini dell'articolo, otterrò le ref con il metodo ref()
          */
@@ -40,11 +40,11 @@ export default function AddArticolo(props) {
             invisibile: invisibile
         }
         try {
+            setLoading(true);
             for(let i=0; i<imm.length;i++) {
                 let string = 'images/'+imm[i].name+v4();
                 const immRef = ref(storage, string);
-                img.push(immRef.fullPath)
-                //console.log(ref(storage, img[i]))
+                img.push(immRef.fullPath) //or img.push(string);
                 await uploadBytes(immRef, imm[i]);
             }
             await addDoc(articoloCollectionRef, { a });
@@ -53,6 +53,8 @@ export default function AddArticolo(props) {
             window.location.reload(false);
         } catch (error) {
             window.alert("ATTENZIONE!!! Errore nell'inserimento dell'articolo!");
+        } finally {
+            setLoading(false);
         }
     }
     function elimina() {
@@ -69,7 +71,9 @@ export default function AddArticolo(props) {
 
     return (
         <>
-            {show && <MDBCard className='mb-3 w-75' shadow="5">
+            {
+            show && <MDBCard className='mb-3 w-75' shadow="5">
+                
                 <br />
                 <MDBCardTitle>Nuovo Articolo</MDBCardTitle>
                 <MDBCardBody>
@@ -92,11 +96,12 @@ export default function AddArticolo(props) {
                     </div>
                     <br />
                     <div>
-                        <MDBBtn id="add-button" outline color="success" onClick={aggiungi}>Aggiungi</MDBBtn>
-                        <MDBBtn id="add-button" outline color="danger" onClick={elimina}>Cancella</MDBBtn>
+                        <MDBBtn id="add-button" outline color="success" disabled={loading} onClick={aggiungi}>{loading && <LoadingModel/>}Aggiungi</MDBBtn>
+                        <MDBBtn id="add-button" outline color="danger" disabled={loading} onClick={elimina}>Cancella</MDBBtn>
                     </div>
                 </MDBCardBody>
-            </MDBCard>}
+            </MDBCard>
+            }
         </>
 
     )

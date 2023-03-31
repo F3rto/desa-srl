@@ -1,6 +1,5 @@
 import { MDBCard, MDBCardBody, MDBCardText, MDBCardTitle } from "mdb-react-ui-kit";
 import '../../App.css';
-import { useState } from 'react';
 import { Slider } from './Slider';
 
 export default function Articolo(props) {

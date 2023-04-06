@@ -40,9 +40,6 @@ export default function EditArticolo(props) {
     const [images, setImages] = useState([]);
 
     async function salva() {
-        /**
-         * TODO: modifica foto
-         */
         const articoloDoc = doc(db, "articoli", id);
         try {
             await deleteDoc(articoloDoc);

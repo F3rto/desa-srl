@@ -65,3 +65,14 @@
   height: 100%; /* Altezza delle immagini */
   object-fit: contain; /* Ridimensiona le immagini per coprire l'intero contenitore */
 }
+
+
+/*fonte zoom: https://www.w3schools.com/howto/howto_css_zoom_hover.asp*/
+.zoom {
+  transition: transform .2s; /* Animation */
+  margin: 0 auto;
+}
+
+.zoom:hover {
+  transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}

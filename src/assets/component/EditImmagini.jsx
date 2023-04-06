@@ -33,7 +33,6 @@ export default function EditImmagini(props) {
                 toDelList.push(immRef)
                 setToDelList(toDelList)
                 console.log(toDelList)
-                //await deleteObject(immRef);
                 setImmagini(immagini.filter(i => i != immagini[id]))
             } catch (error) {
                 console.log(error)
@@ -52,10 +51,7 @@ export default function EditImmagini(props) {
                         <img
                             key={i}
                             id={i}
-                            className="w-25 img-fluid"
-                            /**
-                             * TODO: metodo onClick che elimina l'immagine selezionata da urls e resetta quelle da tenere con setImmagini
-                             */
+                            className="w-25 img-fluid zoom"
                             onClick={async (e) => {
                                 await deleteImage(e.target.id)
                             }}

@@ -56,15 +56,7 @@ export default function Modificabile(props) {
             } catch (error) {
                 window.alert("ATTENZIONE!!! Errore nell' eliminazione dell'articolo!");
             }
-
-
         }
-        /**
-         * Usare dialog react al posto di window.confirm
-         * link: https://mui.com/material-ui/react-dialog/
-         * 
-         * Quindi eliminare l'articolo dal db
-         */
     }
 
     return (
@@ -103,9 +95,6 @@ export default function Modificabile(props) {
                         </MDBCardBody>
                     </MDBCard>
                     :
-                    /**
-                     * usare un EditArticolo al posto di AddArticolo per troppe incongruenze tra l'aggiunta e la modifica
-                     */
                     <EditArticolo show={editMode} set={setEditMode} articolo={props.articolo} />
             }
         </div>

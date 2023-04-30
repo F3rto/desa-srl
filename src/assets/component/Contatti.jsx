@@ -15,7 +15,7 @@ export default function Contatti() {
             <a target="_blank" href='https://www.facebook.com/people/Ricambi-DESA-Srl/100030213562898/?locale=it_IT' className='me-4 text-reset'>
               <MDBIcon fab icon="facebook-f" />
             </a>
-            <a target="_blank" href='' className='me-4 text-reset'>
+            <a target="_blank" href='https://www.google.com/search?q=ricambi+desa+srl+vittoria&ei=_txOZJbOK8WB9u8PyoyIqAY&ved=0ahUKEwiWxfbcxdL-AhXFgP0HHUoGAmUQ4dUDCBA&uact=5&oq=ricambi+desa+srl+vittoria&gs_lcp=Cgxnd3Mtd2l6LXNlcnAQAzIFCAAQogQyBQgAEKIEMgUIABCiBDoICAAQgAQQsANKBAhBGAFQ0AZY9gpggQ1oAXAAeACAAXKIAdECkgEDMy4xmAEAoAEByAEBwAEB&sclient=gws-wiz-serp' className='me-4 text-reset'>
               <MDBIcon fab icon="google" />
             </a>
             <a target="_blank" href='https://www.linkedin.com/in/de-s-a-vittoria-132093179' className='me-4 text-reset'>

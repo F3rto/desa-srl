@@ -29,6 +29,7 @@ export default function Negozio() {
 
     return (
         <div className="principale">
+            <br />
             <h1>Lista Articoli</h1>
             {
             articoli[0]!=="pippo" ? 

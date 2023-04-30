@@ -62,10 +62,6 @@ export default function AddArticolo(props) {
         if(risposta === true) {
             showAdd(false);
         }
-        /**
-         * Usare dialog react al posto di window.confirm
-         * link: https://mui.com/material-ui/react-dialog/
-         */
     }
 
 

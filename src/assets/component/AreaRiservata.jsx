@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useReducer, useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useNavigate } from "react-router-dom"
 import '../../App.css'
@@ -14,7 +14,7 @@ import Placeholder from "./Placeholder";
 
 export default function AreaRiservata() {
 
-    const [user, loading, err] = useAuthState(auth);
+    const [user, loading] = useAuthState(auth);
 
     const [showAdd, setShowAdd] = useState(false);
     const navigate = useNavigate();
@@ -22,16 +22,22 @@ export default function AreaRiservata() {
     const [articoli, setArticoli] = useState(["pippo"]);
     const articoloCollectionRef = collection(db, "articoli");
 
+    const [ignored, forceUpdate] = useReducer(x=>x+1, 0);
+
     useEffect(() => {
         const getArticoli = async () => {
-            const data = await getDocs(articoloCollectionRef);
-            setArticoli(data.docs.map((doc) => ({
-                articolo: doc._document.data.value.mapValue.fields.a.mapValue.fields,
-                id: doc.id
-            })))
+            try {
+                const data = await getDocs(articoloCollectionRef);
+                setArticoli(data.docs.map((doc) => ({
+                    articolo: doc._document.data.value.mapValue.fields.a.mapValue.fields,
+                    id: doc.id
+                })))
+            } catch (error) {
+                console.log(error)
+            }
         }
         getArticoli();
-    }, [])
+    }, [ignored])
 
     useEffect(() => {
         if (!user) {
@@ -64,12 +70,12 @@ export default function AreaRiservata() {
                     }} >
                         <MDBIcon className="me-2" fas icon="plus" /> Aggiungi nuovo articolo
                     </MDBBtn>
-                    <div className="articolo"><AddArticolo show={showAdd} set={setShowAdd} /></div>
+                    <div className="articolo"><AddArticolo show={showAdd} set={setShowAdd} fun={forceUpdate} /></div>
                     <br />
                     <br />
                     {
                         articoli[0] !== "pippo" ?
-                            <ListaModificabili key={uuidv4()} articoli={articoli} />
+                            <ListaModificabili key={uuidv4()} articoli={articoli} fun={forceUpdate}/>
                             :
                             <Placeholder />
                     }

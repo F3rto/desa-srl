@@ -7,7 +7,7 @@ export default function ListaArticoli(props) {
         <div>
             {
                 lista.map((a) => {
-                    return < Modificabile key={a.id} articolo={a} />
+                    return < Modificabile key={a.id} articolo={a} fun={props.fun}/>
                 })
             }
         </div>

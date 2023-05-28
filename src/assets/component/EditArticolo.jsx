@@ -6,6 +6,7 @@ import { deleteObject, ref, uploadBytes } from 'firebase/storage';
 import { db, storage } from "../../firebase-config";
 import EditImmagini from "./EditImmagini";
 import { v4 } from "uuid";
+import Modal from "./Modal";
 
 export default function EditArticolo(props) {
     const show = props.show;
@@ -39,35 +40,44 @@ export default function EditArticolo(props) {
     const [toUpList, setToUpList] = useState([]);
     const [images, setImages] = useState([]);
 
+    const [cancellaModal, setCancellaModal] = useState(false);
+    const cancellaShow = () => { setCancellaModal(!cancellaModal) }
+
+    const [successoModal, setSuccessoModal] = useState(false);
+    const successoShow = () => { setSuccessoModal(!successoModal) }
+
+    const [erroreModal, setErroreModal] = useState(false);
+    const erroreShow = () => {setErroreModal(!erroreModal)}
+
     async function salva() {
         const articoloDoc = doc(db, "articoli", id);
         try {
             await deleteDoc(articoloDoc);
             let a = { imm: imm, nome: nome, cod: cod, descr: descr, dim: dim, codeq: codeq, prezzo: prezzo, invisibile: invisibile };
-            toDelList.forEach(async (t)=>{await deleteObject(t);})
-            toUpList.forEach(async (t,i)=>{
+            toDelList.forEach(async (t) => { await deleteObject(t); })
+            toUpList.forEach(async (t, i) => {
                 await uploadBytes(t, images[i]);
             })
             await addDoc(articoloCollectionRef, { a });
-            window.alert("Articolo aggiornato con successo!");
-            showAdd(false);
-            window.location.reload(false);
+            console.log("successo")
+            successoShow();
+            props.fun();
+            //window.location.reload(false);
         } catch (error) {
-            window.alert("ATTENZIONE!!! Errore nella modifica dell'articolo!");
+            console.log("errore")
+            erroreShow();
         }
     }
+
     function elimina() {
-        let risposta = window.confirm("Sei sicuro di voler annullare le modifiche?");
-        if (risposta === true) {
-            showAdd(false);
-        }
+        showAdd(false);
     }
-    
+
     function addImm(imgs) {
         let temp = imm;
-        let toUp=[];
-        for(let i=0; i<imgs.length;i++) {
-            let string = 'images/'+imgs[i].name+v4();
+        let toUp = [];
+        for (let i = 0; i < imgs.length; i++) {
+            let string = 'images/' + imgs[i].name + v4();
             const immRef = ref(storage, string);
             toUp.push(immRef);
             temp.push(string)
@@ -76,7 +86,10 @@ export default function EditArticolo(props) {
         setImages(imgs);
         setToUpList(toUp);
     }
-
+    
+    function notShowAdd() {
+        showAdd(false);
+    }
 
     return (
         <>
@@ -106,8 +119,11 @@ export default function EditArticolo(props) {
                     <br />
                     <div>
                         <MDBBtn id="add-button" outline color="success" onClick={salva}>Salva</MDBBtn>
-                        <MDBBtn id="add-button" outline color="danger" onClick={elimina}>Annulla</MDBBtn>
+                        <MDBBtn id="add-button" outline color="danger" onClick={cancellaShow}>Annulla</MDBBtn>
                     </div>
+                    <Modal crossFnc={cancellaShow} body="Sei sicuro di voler annullare le modifiche?" btn1Txt="No" btn1Fnc={cancellaShow} btn2Txt="Si" btn2Fnc={elimina} modal={cancellaModal} setModal={setCancellaModal} /> {/**modal cancella */}
+                    <Modal crossFnc={notShowAdd} body="Articolo modificato con successo!" btn1Txt="Close" btn1Fnc={notShowAdd} btn2Txt="" btn2Fnc={()=>{}} modal={successoModal} setModal={setSuccessoModal}/> {/**modal successo */}
+                    <Modal crossFnc={notShowAdd} body="ATTENZIONE!!! Errore nella modifica dell'articolo!" btn1Txt="Close" btn1Fnc={notShowAdd} btn2Txt="" btn2Fnc={()=>{}} modal={erroreModal} setModal={setErroreModal}/> {/**modal errore */}
                 </MDBCardBody>
             </MDBCard>}
         </>

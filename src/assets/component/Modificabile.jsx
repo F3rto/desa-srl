@@ -1,4 +1,4 @@
-import { MDBBtn, MDBCard, MDBCardBody, MDBCardText, MDBCardTitle, MDBIcon } from "mdb-react-ui-kit";
+import { MDBBtn, MDBCard, MDBCardBody, MDBCardText, MDBCardTitle, MDBIcon} from "mdb-react-ui-kit";
 import '../../App.css'
 import { deleteDoc, doc } from "firebase/firestore";
 import { db, storage } from "../../firebase-config";
@@ -6,6 +6,7 @@ import { useState } from "react";
 import EditArticolo from "./EditArticolo";
 import { Slider } from "./Slider";
 import { deleteObject, ref } from "firebase/storage";
+import Modal from "./Modal";
 
 export default function Modificabile(props) {
     /**
@@ -19,6 +20,15 @@ export default function Modificabile(props) {
     const flag = Object.entries(a.imm.arrayValue).length !== 0
     const key = props.articolo.id
     const [editMode, setEditMode] = useState(false);
+
+    const [eliminaModal, setEliminaModal] = useState(false);
+    const eliminaShow = () => { setEliminaModal(!eliminaModal) }
+
+    const [successoModal, setSuccessoModal] = useState(false);
+    const successoShow = () => { setSuccessoModal(!successoModal) }
+
+    const [erroreModal, setErroreModal] = useState(false);
+    const erroreShow = () => {setErroreModal(!erroreModal)}
 
     function modifica() {
         setEditMode(true);
@@ -36,27 +46,27 @@ export default function Modificabile(props) {
             }
         } catch (error) {
             ret = false;
-            window.alert("ATTENZIONE!!! Errore nell' eliminazione dell'articolo!");
+            erroreShow();
         } finally {
             return ret;
         }
     }
 
     async function elimina() {
-        let temp = window.confirm("Sei sicuro di voler eliminare l'articolo?");
-        if (temp) {
-            const articoloDoc = doc(db, "articoli", key);
-            try {
-                let ret = await eliminaImmagini();
-                if (ret) {
-                    await deleteDoc(articoloDoc);
-                    window.alert("Articolo eliminato con successo!");
-                    window.location.reload(false);
-                }
-            } catch (error) {
-                window.alert("ATTENZIONE!!! Errore nell' eliminazione dell'articolo!");
+        eliminaShow();
+        const articoloDoc = doc(db, "articoli", key);
+        try {
+            let ret = await eliminaImmagini();
+            if (ret) {
+                await deleteDoc(articoloDoc);
+                successoShow();
+                props.fun();
+                //window.location.reload(false);
             }
+        } catch (error) {
+            erroreShow();
         }
+
     }
 
     return (
@@ -88,14 +98,18 @@ export default function Modificabile(props) {
                                     <MDBIcon far icon="edit" /> Modifica
                                 </MDBBtn>
 
-                                <MDBBtn outline color='danger' id="delete" onClick={elimina}>
+                                <MDBBtn outline color='danger' id="delete" onClick={eliminaShow}>
                                     <MDBIcon far icon="trash-alt" /> Elimina
                                 </MDBBtn>
+                                <Modal crossFnc={eliminaShow} body="Sei sicuro di voler eliminare l'articolo?" btn1Txt="No" btn1Fnc={eliminaShow} btn2Txt="Si" btn2Fnc={elimina} modal={eliminaModal} setModal={setEliminaModal}/> {/**modal elimina */}
+                                <Modal crossFnc={successoShow} body="Articolo eliminato con successo!" btn1Txt="Close" btn1Fnc={successoShow} btn2Txt="" btn2Fnc={()=>{}} modal={successoModal} setModal={setSuccessoModal}/> {/**modal successo */}
+                                <Modal crossFnc={erroreShow} body="ATTENZIONE!!! Errore nell'eliminazione dell'articolo!" btn1Txt="Close" btn1Fnc={erroreShow} btn2Txt="" btn2Fnc={()=>{}} modal={erroreModal} setModal={setErroreModal}/> {/**modal errore */}
+                                
                             </div>
                         </MDBCardBody>
                     </MDBCard>
                     :
-                    <EditArticolo show={editMode} set={setEditMode} articolo={props.articolo} />
+                    <EditArticolo show={editMode} set={setEditMode} articolo={props.articolo} fun={props.fun}/>
             }
         </div>
     )

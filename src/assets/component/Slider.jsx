@@ -7,7 +7,8 @@ import '../../App.css'
 export function Slider(props) {
     const immagini = props.immagini;
     const [urls, setUrls] = useState([]);
-
+    const flag = immagini.length == 1 ? false : true;
+    
     useEffect(() => {
         async function getUrls() {
             const urlPromises = immagini.map((i) => {
@@ -21,7 +22,7 @@ export function Slider(props) {
     }, [immagini])
 
     return (
-        <Carousel variant={"dark"}>
+        <Carousel variant={"dark"} controls={flag}>
             {
                 urls.map((u, i) => {
                     return <Carousel.Item id='foto' key={i}>

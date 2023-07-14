@@ -61,7 +61,6 @@ export default function Modificabile(props) {
                 await deleteDoc(articoloDoc);
                 successoShow();
                 props.fun();
-                //window.location.reload(false);
             }
         } catch (error) {
             erroreShow();

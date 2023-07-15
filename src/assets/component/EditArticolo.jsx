@@ -3,7 +3,7 @@ import { MDBCard, MDBFile, MDBCardBody, MDBCardTitle, MDBInput, MDBRow, MDBCol, 
 import '../../App.css'
 import { addDoc, collection, doc, deleteDoc } from "firebase/firestore";
 import { deleteObject, ref, uploadBytes } from 'firebase/storage';
-import { db, storage } from "../../firebase-config";
+import { db, storage } from "../../../firebase";
 import EditImmagini from "./EditImmagini";
 import { v4 } from "uuid";
 import Modal from "./Modal";

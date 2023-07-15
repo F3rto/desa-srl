@@ -1,6 +1,6 @@
 import Carousel from 'react-bootstrap/Carousel';
 import { getDownloadURL, ref } from 'firebase/storage';
-import { storage } from '../../firebase-config';
+import { storage } from "../../../firebase";
 import { useState, useEffect } from 'react';
 import '../../App.css'
 

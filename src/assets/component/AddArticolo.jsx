@@ -2,7 +2,7 @@ import { useState } from "react";
 import {MDBCard, MDBFile, MDBCardBody, MDBCardTitle, MDBInput, MDBTextArea, MDBBtn, MDBCheckbox} from "mdb-react-ui-kit";
 import '../../App.css'
 import { addDoc, collection } from "firebase/firestore";
-import { db, storage } from "../../firebase-config";
+import { db, storage } from "../../../firebase";
 import { ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import LoadingModel from './LoadingModel'

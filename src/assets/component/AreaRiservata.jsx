@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useNavigate } from "react-router-dom"
 import '../../App.css'
-import { auth, db } from "../../firebase-config"
+import { auth, db } from "../../../firebase"
 import { collection, getDocs } from "firebase/firestore";
 import { signOut } from "firebase/auth"
 import { MDBBtn, MDBIcon } from "mdb-react-ui-kit"
@@ -48,7 +48,7 @@ export default function AreaRiservata() {
     async function logout() {
         try {
             await signOut(auth);
-            return navigate("/");
+            return navigate("/private");
         } catch (error) {
             console.log(error);
         }

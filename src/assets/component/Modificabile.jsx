@@ -1,7 +1,7 @@
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardText, MDBCardTitle, MDBIcon} from "mdb-react-ui-kit";
 import '../../App.css'
 import { deleteDoc, doc } from "firebase/firestore";
-import { db, storage } from "../../firebase-config";
+import { db, storage } from "../../../firebase";
 import { useState } from "react";
 import EditArticolo from "./EditArticolo";
 import { Slider } from "./Slider";

@@ -1,6 +1,6 @@
 import React from 'react';
 import { getDownloadURL, ref, deleteObject } from 'firebase/storage';
-import { storage } from '../../firebase-config';
+import { storage } from "../../../firebase";
 import { useState, useEffect } from 'react';
 import '../../App.css';
 import Modal from "./Modal";

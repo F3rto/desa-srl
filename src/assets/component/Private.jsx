@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import logo from '../images/logo.png'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../../firebase-config';
+import { auth } from "../../../firebase";
 import Spinner from "./Spinner"
 
 

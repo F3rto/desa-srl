@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import ListaArticoli from "./ListaArticoli"
 import { v4 as uuidv4 } from 'uuid';
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase-config";
+import { db } from "../../../firebase";
 import Placeholder from "./Placeholder";
 
 export default function Negozio() {

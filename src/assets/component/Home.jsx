@@ -10,7 +10,6 @@ export default function Home() {
             <Carosello />
             <NegozioReference />
             <CookieConsent buttonText="Capisco">Questo sito utilizza cookies per migliorare l'esperienza di utilizzo.</CookieConsent>
-
         </div>
     )
 }

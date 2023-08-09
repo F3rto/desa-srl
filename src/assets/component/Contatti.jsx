@@ -70,7 +70,7 @@ export default function Contatti() {
         </section>
 
         <div className='text-center p-1' style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
-          
+          Credits: <a target='_blank' href='https://github.com/F3rto'>Giuseppe Zocco</a>
         </div>
       </MDBFooter>
     </div>

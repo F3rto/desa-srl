@@ -30,7 +30,7 @@ export default function Negozio() {
     return (
         <div className="principale">
             <br />
-            <h1>Lista Articoli</h1>
+            <h1>Negozio</h1>
             {
             articoli[0]!=="pippo" ? 
             <ListaArticoli key={uuidv4()} articoli={articoli}/>

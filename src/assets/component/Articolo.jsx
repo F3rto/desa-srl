@@ -12,7 +12,6 @@ export default function Articolo(props) {
     const immagine = a.imm.arrayValue.values[0].stringValue;
     const [url, setUrl] = useState([]);
 
-    const setArticoloSelezionato=props.setArticoloSelezionato;
     
     useEffect(() => {
         async function getUrls() {
@@ -24,12 +23,9 @@ export default function Articolo(props) {
         getUrls();
     }, [immagine])
 
-    function handleClick() {
-        setArticoloSelezionato(a);
-    }
 
     return (
-        <div className="articolo zoomArticolo" onClick={handleClick}>
+        <div className="articolo zoomArticolo">
             <MDBCard alignment="start" className='mb-3 w-75' shadow="5">
                 {flag?<MDBCardImage src={url} position="top" alt="Foto"/> :<></>}
                 <MDBCardBody alignment="left">

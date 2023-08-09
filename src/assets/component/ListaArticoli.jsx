@@ -6,7 +6,6 @@ import DettaglioArticolo from "./DettaglioArticolo"
 export default function ListaArticoli(props) {
     const lista = props.articoli;
     const [articoloSelezionato, setArticoloSelezionato] = useState(null);
-    document.title = "ciao";
 
     return (
         <MDBContainer>

@@ -5,6 +5,7 @@ import { useArticoloContext } from '../../ArticoloContext';
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 
 
 export default function DettaglioArticolo(props) {
@@ -30,6 +31,10 @@ export default function DettaglioArticolo(props) {
 
     return (
         <div className="articolo">
+            <Helmet>
+        <title>{a.nome.stringValue + " " + a.cod.stringValue} - Ricambi Desa</title>
+        <meta name="description" content={a.nome.stringValue + " " + a.cod.stringValue+" disponibile su Ricambi Desa. Scopri di più sui nostri prodotti di alta qualità."} />
+      </Helmet>
             <MDBCard alignment="start" className='mb-3 w-75' shadow="5">
                 {flag ? <Slider immagini={a.imm.arrayValue.values} /> : <></>}
                 <MDBCardBody alignment="left">

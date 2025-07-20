@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './assets/component/Home.jsx';
 import Negozio from './assets/component/Negozio.jsx';
 import Private from './assets/component/Private.jsx';
@@ -9,7 +9,15 @@ import AreaRiservata from './assets/component/AreaRiservata';
 import DettaglioArticolo from './assets/component/DettaglioArticolo';
 import { ArticoloProvider } from './ArticoloContext';
 
+// Componente per la logica dei contatti
+function ContattiWrapper() {
+  const location = useLocation();
 
+  // Condizione: nascondi "Contatti" solo su `/articolo/:nome/:codice`
+  const shouldShowContatti = !location.pathname.startsWith('/articolo/');
+
+  return shouldShowContatti ? <Contatti /> : null;
+}
 
 function App() {
   return (
@@ -27,7 +35,7 @@ function App() {
         </ArticoloProvider>
       </div>
       <div>
-        <Contatti />
+        <ContattiWrapper />
       </div>
     </Router>
   )
